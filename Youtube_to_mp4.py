@@ -1,8 +1,8 @@
-import os # ä½œæ¥­ç³»çµ±ç›¸é—œæ¨¡çµ„(å¸¸ç”¨æ–¼æª”æ¡ˆè¤‡è£½ã€ä¿®æ”¹ã€æŸ¥è©¢)
-os.chdir('C:\\Users\\drlin\\Desktop\\012') # æ”¹è®Šå·¥ä½œç›®éŒ„åˆ°æŒ‡å®šçš„è·¯å¾‘
+import os # ä½?æ¥­ç³»çµ±ç?¸é??æ¨¡ç??(å¸¸ç?¨æ?¼æ??æ¡?è¤?è£½ã??ä¿®æ?¹ã????¥è©¢)
+os.chdir('C:\\Users\\drlin\\Desktop\\012') # ??¹è??å·¥ä????®é????°æ??å®????è·¯å??
 
 from pytube import YouTube
 yt = YouTube('https://www.youtube.com/watch?v=404OiMAu6aY&ab_channel=FashionProX')
 print('Downloading...')
-yt.streams.filter().get_by_resolution('1080p').download() # ä¸‹è¼‰å›ºå®šç•«è³ªå½±ç‰‡ï¼Œä»¥filenameç‚ºæª”å
+yt.streams.filter().get_by_resolution('1080p').download() # ä¸?è¼???ºå????«è³ªå½±ç??ï¼?ä»¥filename??ºæ?????
 print('Download successful !')
