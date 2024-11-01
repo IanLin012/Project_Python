@@ -162,7 +162,7 @@ def display_moves(pokemon_name):
     pokemon = pokemons[pokemon_name]
     for i, move in enumerate(pokemon["moves"], 1):
         move_info = moves[move]
-        if 'healing' in move_info:
+        if('healing' in move_info):
             print(f"{i}. {move}（{move_info['type']}屬性　治療：{move_info['healing']}　命中：{move_info['accuracy']}%）\n   效果：{move_info['description']}")
         else:
             print(f"{i}. {move}（{move_info['type']}屬性　威力：{move_info['power']}　命中：{move_info['accuracy']}%）\n   效果：{move_info['description']}")
@@ -191,7 +191,11 @@ def calculate_damage(attacker, defender, move):
     # 傷害計算
     type_effectiveness = type_chart[move_data['type']][defender_data['type']]
     base_damage = (attacker_data['attack'] * move_data['power'] * type_effectiveness / 100) * (defender_data['defense'] / 100)
-    base_healing = (move_data['healing'])
+    
+    # 招式為光合作用
+    if('healing' in move_data):
+        return int(move_data['healing'])
+    
     # 顯示屬性剋制狀態
     if(type_effectiveness == 2.0):
         print("招式屬性剋制敵方，傷害增加100%！")
@@ -224,47 +228,85 @@ def battle_round(player_pokemon, computer_pokemon, player_hp, computer_hp, battl
     # 選擇招式
     player_move = select_move(player_pokemon)
     computer_move = random.choice(pokemons[computer_pokemon]["moves"])
+    
+    # 顯示玩家使用招式
+    print(f"\n{player_pokemon}使用了{player_move}！")
+
+    # 計算玩家回復HP
+    if(player_pokemon == '妙蛙種子' and player_move == '光合作用'):
+        player_healing = calculate_damage(player_pokemon, computer_pokemon, player_move)
+        player_hp += player_healing
+        # HP不可超過最大HP
+        if(player_hp > 105):
+            player_healing = 50 - (player_hp - 105)
+            player_hp = 105
+        print(f"{player_pokemon}回復了{player_healing}點HP！")
+        print(f"{player_pokemon}剩餘HP：{player_hp}")
+        print(f"{computer_pokemon}剩餘HP：{computer_hp}\n")
+        # 更新戰鬥統計
+        battle_stats['player']['current_hp'] += player_healing
+        battle_stats['player']['moves_used'].append(player_move)
 
     # 計算玩家對電腦傷害
-    print(f"\n{player_pokemon}使用了{player_move}！")
-    player_damage = calculate_damage(player_pokemon, computer_pokemon, player_move)
-    if is_hit(moves[player_move]['accuracy']):
-        if is_critical():
-            player_damage *= 1.5
-            print("爆擊！傷害增加50%！")
-        computer_hp -= player_damage
-        print(f"命中！{computer_pokemon}受到了{player_damage}點傷害！")
     else:
-        player_damage = 0
-        print(f"沒有命中！{computer_pokemon}無受到傷害！")
-    if(computer_hp < 0):
-        computer_hp = 0
-    print(f"{computer_pokemon}剩餘HP：{computer_hp}\n")
-    
-    # 計算電腦對玩家傷害
-    print(f"{computer_pokemon}使用了{computer_move}！")
-    computer_damage = calculate_damage(computer_pokemon, player_pokemon, computer_move)
-    if is_hit(moves[computer_move]['accuracy']):
-        if is_critical():
-            computer_damage *= 1.5
-            print("爆擊！傷害增加50%！")
-        player_hp -= computer_damage
-        print(f"命中！{player_pokemon}受到了{computer_damage}點傷害！")
-    else:
-        computer_damage = 0
-        print(f"沒有命中！{player_pokemon}無受到傷害")
-    if(player_hp < 0):
-        player_hp = 0
-    print(f"{player_pokemon}剩餘HP：{player_hp}")
-    
-    # 更新戰鬥統計
-    battle_stats['player']['current_hp'] -= computer_damage
-    battle_stats['player']['damage_dealt'] += player_damage
-    battle_stats['player']['moves_used'].append(player_move)
+        player_damage = calculate_damage(player_pokemon, computer_pokemon, player_move)
+        if is_hit(moves[player_move]['accuracy']):
+            if is_critical():
+                player_damage *= 1.5
+                print("爆擊！傷害增加50%！")
+            computer_hp -= player_damage
+            print(f"命中！{computer_pokemon}受到了{player_damage}點傷害！")
+        else:
+            player_damage = 0
+            print(f"沒有命中！{computer_pokemon}並未受到傷害！")
+        # 電腦剩於HP最低顯示為零
+        if(computer_hp < 0):
+            computer_hp = 0
+            print(f"{computer_pokemon}剩餘HP：{computer_hp}")
+        else:
+            print(f"{computer_pokemon}剩餘HP：{computer_hp}\n")
+        # 更新戰鬥統計
+        battle_stats['computer']['current_hp'] -= player_damage
+        battle_stats['player']['damage_dealt'] += player_damage
+        battle_stats['player']['moves_used'].append(player_move)
+        # 電腦HP歸零
+        if(battle_stats['computer']['current_hp'] <= 0):
+            return player_hp, computer_hp
 
-    battle_stats['computer']['current_hp'] -= player_damage
-    battle_stats['computer']['damage_dealt'] += computer_damage
-    battle_stats['computer']['moves_used'].append(computer_move)
+    # 顯示電腦使用招式
+    print(f"{computer_pokemon}使用了{computer_move}！")
+
+    # 計算電腦回復HP
+    if(computer_pokemon == '妙蛙種子' and computer_move == '光合作用'):
+        computer_healing = calculate_damage(player_pokemon, computer_pokemon, player_move)
+        computer_hp += computer_healing
+        print(f"{computer_pokemon}回復了{computer_healing}點HP！")
+        print(f"{computer_pokemon}剩餘HP：{computer_hp}")
+        print(f"{player_pokemon}剩餘HP：{player_hp}\n")
+        # 更新戰鬥統計
+        battle_stats['computer']['current_hp'] += computer_healing
+        battle_stats['computer']['moves_used'].append(computer_move)
+
+    # 計算電腦對玩家傷害
+    else:
+        computer_damage = calculate_damage(computer_pokemon, player_pokemon, computer_move)
+        if is_hit(moves[computer_move]['accuracy']):
+            if is_critical():
+                computer_damage *= 1.5
+                print("爆擊！傷害增加50%！")
+            player_hp -= computer_damage
+            print(f"命中！{player_pokemon}受到了{computer_damage}點傷害！")
+        else:
+            computer_damage = 0
+            print(f"沒有命中！{player_pokemon}並未受到傷害！")
+        # 玩家剩於HP最低顯示為零
+        if(player_hp < 0):
+            player_hp = 0
+        print(f"{player_pokemon}剩餘HP：{player_hp}")
+        # 更新戰鬥統計
+        battle_stats['player']['current_hp'] -= computer_damage
+        battle_stats['computer']['damage_dealt'] += computer_damage
+        battle_stats['computer']['moves_used'].append(computer_move)
     
     return player_hp, computer_hp
 
@@ -311,8 +353,6 @@ def main():
         print(f"{player_pokemon}獲勝！\n")
     elif(player_hp <= 0 and computer_hp > 0):
         print(f"{computer_pokemon}獲勝！\n")
-    else:
-        print(f"{player_pokemon}與{computer_pokemon}平手！\n")
 
     # 顯示對戰統計
     print("對戰統計：")
