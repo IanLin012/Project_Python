@@ -284,6 +284,10 @@ def battle_round(player_pokemon, computer_pokemon, player_hp, computer_hp, battl
     if(computer_pokemon == '妙蛙種子' and computer_move == '光合作用'):
         computer_healing = calculate_damage(player_pokemon, computer_pokemon, player_move)
         computer_hp += computer_healing
+        # HP不可超過最大HP
+        if(computer_hp > 105):
+            computer_healing = 50 - (computer_hp - 105)
+            computer_hp = 105
         print(f"{computer_pokemon}回復了{computer_healing}點HP！")
         print(f"{computer_pokemon}剩餘HP：{computer_hp}")
         print(f"{player_pokemon}剩餘HP：{player_hp}\n")
