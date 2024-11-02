@@ -130,7 +130,7 @@ type_chart = {
 
 def display_available_pokemons():
     print("=== 寶可夢對戰模擬器 ===")
-    # 顯示所有寶可夢資訊
+    # 顯示所有寶可夢個別資料
     print("可選擇的寶可夢：")
     for i, pokemon in enumerate(pokemons.keys(), 1):
         pokemon_data = pokemons[pokemon]
@@ -139,6 +139,7 @@ def display_available_pokemons():
 
 def select_pokemon():
     # TODO: 實作選擇寶可夢的邏輯
+    # 輸入偵錯
     while True:
         try:
             choice = int(input("請選擇你的寶可夢（輸入數字）："))
@@ -151,9 +152,8 @@ def select_pokemon():
 
 def select_computer_pokemon(player_pokemon):
     # TODO: 實作電腦選擇寶可夢的邏輯
-    import random
     all_pokemons = list(pokemons.keys())
-    all_pokemons.remove(player_pokemon)
+    all_pokemons.remove(player_pokemon) # 避免與玩家寶可夢重複
     return random.choice(all_pokemons)
 
 def display_moves(pokemon_name):
@@ -162,8 +162,10 @@ def display_moves(pokemon_name):
     pokemon = pokemons[pokemon_name]
     for i, move in enumerate(pokemon["moves"], 1):
         move_info = moves[move]
+        # 光合作用顯示治療
         if('healing' in move_info):
             print(f"{i}. {move}（{move_info['type']}屬性　治療：{move_info['healing']}　命中：{move_info['accuracy']}%）\n   效果：{move_info['description']}")
+        # 其餘招式顯示威力
         else:
             print(f"{i}. {move}（{move_info['type']}屬性　威力：{move_info['power']}　命中：{move_info['accuracy']}%）\n   效果：{move_info['description']}")
     print()
@@ -171,6 +173,7 @@ def display_moves(pokemon_name):
 def select_move(pokemon_name):
     # TODO: 實作選擇招式的邏輯
     display_moves(pokemon_name)
+    # 輸入偵錯
     while True:
         try:
             choice = int(input("請選擇招式（輸入數字）："))
@@ -192,7 +195,7 @@ def calculate_damage(attacker, defender, move):
     type_effectiveness = type_chart[move_data['type']][defender_data['type']]
     base_damage = (attacker_data['attack'] * move_data['power'] * type_effectiveness / 100) * (defender_data['defense'] / 100)
     
-    # 招式為光合作用
+    # 招式光合作用返回治療量
     if('healing' in move_data):
         return int(move_data['healing'])
     
@@ -216,6 +219,7 @@ def is_critical():
 
 def display_battle_stats(pokemon_name, stats):
     # TODO: 實作戰鬥統計顯示
+    # HP最低為零
     if(stats['current_hp'] < 0):
         stats['current_hp'] = 0
     print(f"{pokemon_name}：")
@@ -259,7 +263,7 @@ def battle_round(player_pokemon, computer_pokemon, player_hp, computer_hp, battl
         else:
             player_damage = 0
             print(f"沒有命中！{computer_pokemon}並未受到傷害！")
-        # 電腦剩於HP最低顯示為零
+        # 電腦剩於HP最低為零
         if(computer_hp < 0):
             computer_hp = 0
             print(f"{computer_pokemon}剩餘HP：{computer_hp}")
@@ -299,7 +303,7 @@ def battle_round(player_pokemon, computer_pokemon, player_hp, computer_hp, battl
         else:
             computer_damage = 0
             print(f"沒有命中！{player_pokemon}並未受到傷害！")
-        # 玩家剩於HP最低顯示為零
+        # 玩家剩於HP最低為零
         if(player_hp < 0):
             player_hp = 0
         print(f"{player_pokemon}剩餘HP：{player_hp}")
