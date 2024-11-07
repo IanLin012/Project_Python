@@ -6,5 +6,5 @@ def calculate_total_price(menu, order):
     return(total)
 
 
-total_price = calculate_total_price({"漢堡": 50, "薯條": 30, "可樂": 20}, ["蘋果", "漢堡", "薯條", "可樂"])
+total_price = calculate_total_price({"漢堡": 50, "薯條": 30, "可樂": 20}, ["漢堡", "薯條", "可樂"])
 print("餐點總價格：" + str(total_price))
