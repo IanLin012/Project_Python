@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> BMI Form </title>
+</head>
+<body style="text-align: center; background-color: rgb(190, 200, 255);">
+    <h1> Enter your BMI information </h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"> Submit </button>
+    </form>
+    <div style="display: flex; justify-content: center;">
+    <form method="post" action="{% url 'delete_data' %}">
+        {% csrf_token %}
+        <button type="submit" style="margin: 10px;"> Delete All Data </button>
+    </form>
+    <form action="{% url 'bmi_statistics' %}">
+        <button type="submit" style="margin: 10px;"> Statistics </button>
+    </form>
+    <form action="{% url 'generate_data' %}">
+        <button type="submit" style="margin: 10px;"> Generate Data </button>
+    </form>
+    </div>
+</body>
+</html>

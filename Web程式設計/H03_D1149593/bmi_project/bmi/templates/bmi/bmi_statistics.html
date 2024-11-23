@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> BMI Statistics </title>
+    </head>
+    <body style="background-color: rgb(190, 200, 255);">
+        <h1> BMI Statistics </h1>
+        <h2 style="color: blue;"> Low BMI (BMI < 18.5) </h2>
+        <ul>
+            {% for person in LowBMI %}
+                <li> <b> {{ person.name }} </b> - Height: {{ person.height }} / Weight: {{ person.weight }} / BMI: {{ person.bmi }} </li>
+            {% endfor %}
+        </ul>
+        <h2 style="color: black;"> Normal BMI (18.5 <= BMI < 24) </h2>
+        <ul>
+            {% for person in NormalBMI %}
+                <li> <b> {{ person.name }} </b> - Height: {{ person.height }} / Weight: {{ person.weight }} / BMI: {{ person.bmi }} </li>
+            {% endfor %}
+        </ul>
+        <h2 style="color: red;"> High BMI (BMI >= 24) </h2>
+        <ul>
+            {% for person in HighBMI %}
+                <li> <b> {{ person.name }} </b> - Height: {{ person.height }} / Weight: {{ person.weight }} / BMI: {{ person.bmi }} </li>
+            {% endfor %}
+        </ul>
+        <form action="{% url 'bmi_form' %}">
+            <button type="submit"> Continue Edit </button>
+        </form>
+    </body>
+</html>
