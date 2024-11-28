@@ -26,8 +26,6 @@ class TaskWidget(BoxLayout):
         self.parent_list = parent_list
         self.text = text
 
-
-
         # 待辦事項文字
         self.task_label = Label(text=text, size_hint_x=0.7)
         self.add_widget(self.task_label)
@@ -49,7 +47,6 @@ class TaskWidget(BoxLayout):
     def on_edit(self, instance): 
         """當編輯按鈕被點擊時，呼叫父列表的編輯方法"""
         self.parent_list.edit_task(self)
-
 
 class TodoList(BoxLayout):
     def __init__(self, **kwargs):
@@ -98,11 +95,9 @@ class TodoList(BoxLayout):
         self.add_button.text = '確認修改'
         self.task_input.focus = True  # 自動聚焦到輸入框
 
-
 class TodoApp(App):
     def build(self):
         return TodoList()
-
 
 if __name__ == '__main__':
     TodoApp().run()
