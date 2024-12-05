@@ -4,19 +4,20 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.core.text import LabelBase
 from kivy.resources import resource_add_path
-import os
-
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
+import os
 
 # 引用字體檔案
 resource_add_path(os.path.abspath('TaipeiSansTCBeta-Regular.ttf'))
 # 將kivy預設的字體替換成指定的中文字體
 LabelBase.register('Roboto', 'TaipeiSansTCBeta-Regular.ttf')
 
+"""水平或垂直排列的佈局管理器"""
 class TaskWidget(BoxLayout):
+    """初始化接收參數（待辦事項的文字內容, 指向父列表（與主待辦事項管理系統互動）, 傳遞額外參數到 BoxLayout）"""
     def __init__(self, text, parent_list, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(**kwargs) # 繼承 BoxLayout 的父類初始化方法
         self.orientation = 'horizontal'
         self.size_hint_y = None
         self.height = 40
@@ -26,7 +27,7 @@ class TaskWidget(BoxLayout):
         self.parent_list = parent_list
         self.text = text
 
-        # 待辦事項文字
+        # 待辦事項內容
         self.task_label = Label(text=text, size_hint_x=0.7)
         self.add_widget(self.task_label)
 
@@ -73,7 +74,7 @@ class TodoList(BoxLayout):
         self.input_layout.add_widget(self.task_input)
         self.input_layout.add_widget(self.add_button)
 
-        # 將所有元件加入主布局
+        # 將所有元件加入主佈局
         self.add_widget(Label(text='待辦事項', size_hint_y=0.1))
         self.add_widget(self.tasks_layout)
         self.add_widget(self.input_layout)
