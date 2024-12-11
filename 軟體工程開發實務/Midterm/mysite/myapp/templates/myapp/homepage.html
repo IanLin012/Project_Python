@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/jquery.prettyPhoto.js"></script>
+    <script src="/static/js/jquery.flexslider.js"></script>
+    <script src="/static/js/jquery.custom.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#btn-blog-next").click(function () {
+                $('#blogCarousel').carousel('next')
+            });
+            $("#btn-blog-prev").click(function () {
+                $('#blogCarousel').carousel('prev')
+            });
+
+            $("#btn-client-next").click(function () {
+                $('#clientCarousel').carousel('next')
+            });
+            $("#btn-client-prev").click(function () {
+                $('#clientCarousel').carousel('prev')
+            });
+
+        });
+
+        $(window).load(function () {
+
+            $('.flexslider').flexslider({
+                animation: "slide",
+                slideshow: true,
+                start: function (slider) {
+                    $('body').removeClass('loading');
+                }
+            });
+        });
+
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 首頁 </title>
+    <style>
+        /*全域*/
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        /*頁首*/
+        .header {
+            background: linear-gradient(to right, #80bdff, #007bff);
+            height: 100px;
+            display: flex;
+            align-items: center;
+        }
+        .header h1 {
+            margin-right: 30px;
+            margin-left: auto;
+            color: white;
+            justify-content: center;
+        }
+        /*語言*/
+        .language {
+            position: relative;
+            left: 1%;
+            border: solid;
+            padding: 5px;
+        }
+        .language a {
+            color: blue;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .language a:hover {
+            color: red;
+        }
+        /*帳號資訊*/
+        .account {
+            position: absolute;
+            top: 16%;
+            left: 1%;
+            border: solid gray;
+            border-collapse: collapse;
+            border-radius: 8px;
+            width: 200px;
+            height: 130px;
+            text-align: center;
+        }
+        .account p {
+            position: relative;
+            top: 3%;
+            font-weight: bold;
+            line-height: 0;
+        }
+        .account span {
+            color: blue;
+        }
+        /*登出*/
+        .logout {
+            display: flex;
+            position: relative;
+            top: 6%;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #007bff;
+            width: 100px;
+            height: 35px;
+            border-radius: 5%;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .logout:hover {
+            background-color: #0056b3;
+        }
+        .button {
+            position: absolute;
+            top: 18%;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #007bff;
+            width: 110px;
+            height: 55px;
+            border: none;
+            border-radius: 8px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        /*已選課表*/
+        .selected {
+            right: 2%;
+        }
+        /*課程搜尋*/
+        .search {
+            right: 12%;
+        }
+        .hint {
+            position: relative;
+            top: 110px;
+            text-align: center;
+        }
+        .hint span {
+            color:#007bff;
+        }
+        /*頁尾*/
+        .footer {
+            position: absolute;
+            bottom: 2%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: gray;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    {% load i18n %}
+    <div class="header">
+        <div class="language">
+            <a href="{% url 'switch_language' 'zh-hant' %}"> 中文 </a> |
+            <a href="{% url 'switch_language' 'en' %}"> English </a> |
+            <a href="{% url 'switch_language' 'ja' %}"> 日本語 </a>
+        </div>
+        <h1>{% trans "首頁" %}</h1>
+    </div>
+    <div class="account">
+        <p>{% trans "目前帳號" %}</p>
+        <b>{% trans "姓名:" %}</b><span id="username">{{ name }}</span> <br>
+        <b>{% trans "學號:" %}</b><span id="uid">{{ uid }}</span>
+        <div class="logout" onclick="window.location.href='/myapp/login/'">{% trans "登出" %}</div>
+    </div>
+    <div class="function">
+        <button class="button selected" id="curriculum-button" type="button"><b>{% trans "已選課表" %}</b></button>
+        <button class="button search" id="coursesearch-button" type="button"><b>{% trans "課程查詢" %}</b></button>
+    </div>
+    <div class="hint">
+        <h1> <span id="username">{{ name }}</span> {% trans "歡迎!" %} </h1>
+        <h1>{% trans "點選課程查詢以進行選課" %}</h1>
+        <h1>{% trans "點選已選課表以檢視加選課程" %}</h1>
+    </div>
+    <div class="footer"> © 開發者：軟體工程開發實務第五組 </div>
+    <script>
+        // 當頁面載入時彈出提醒
+        
+        window.onload = function() {
+            alert("{% trans '選課系統將在11/30關閉' %}");
+        };
+        $('#coursesearch-button').click(function () {
+            
+            event.preventDefault();  // 阻止默認表單提交
+            
+            // 發送 POST 請求，將 uid 和 name 從 session 發送到 views
+            $.ajax({
+                url: window.location.href,  // 指定發送的 URL
+                type: "POST",
+                data: {'type': 'tocoursesearch'},
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");    // csrf
+                },
+                success: function (data) {
+                    // data是服务器端返回的字符串
+                    var dic = JSON.parse(data)
+                    if (!dic.status) 
+                        alert(JSON.parse(data).msg);
+
+                    else window.location.href = "/myapp/coursesearch/";
+                }
+            });
+        });
+        $('#curriculum-button').click(function () {
+            
+            event.preventDefault();  // 阻止默認表單提交
+            
+            // 發送 POST 請求，將 uid 和 name 從 session 發送到 views
+            $.ajax({
+                url: window.location.href,  // 指定發送的 URL
+                type: "POST",
+                data: {'type': 'tocoursesearch'},
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");    // csrf
+                },
+                success: function (data) {
+                    // data是服务器端返回的字符串
+                    var dic = JSON.parse(data)
+                    if (!dic.status) 
+                        alert(JSON.parse(data).msg);
+
+                    else window.location.href = "/myapp/selected_courses/";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
