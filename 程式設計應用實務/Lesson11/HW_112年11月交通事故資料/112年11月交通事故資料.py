@@ -4,12 +4,11 @@ import pandas as pd
 """取得台中市112年11月交通事故資料"""
 response = requests.get("https://datacenter.taichung.gov.tw/swagger/OpenData/92979089-9aaf-4ba3-be97-85e857ec4fd5")
 traffic_json = json.loads(response.text)
-# print(traffic_json)
 
-"""JSON 轉為 DataFrame"""
+"""JSON轉為DataFrame"""
 df = pd.DataFrame(traffic_json)
 
-"""區域分組"""
+"""按區域分組"""
 grouped = df.groupby('區')
 
 """每個區域儲存到不同的工作簿"""
