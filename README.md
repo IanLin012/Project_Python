@@ -20,3 +20,8 @@ spacing：元件之間的間距
 size_hint：尺寸佔比 (x水平, y垂直)  
 add_widget：加入元件  
 bind(on_press)：綁定按下按鈕事件
+
+Youtube to m4a
+```bash
+yt-dlp --ffmpeg-location C:\Users\drlin\Downloads\ffmpeg-7.1-essentials_build\ffmpeg-7.1-essentials_build\bin -f bestaudio --extract-audio --audio-format alac "link"
+```
